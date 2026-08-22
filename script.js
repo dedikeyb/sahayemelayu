@@ -1,7 +1,7 @@
 const header = document.querySelector('[data-header]');
 const revealItems = document.querySelectorAll('.reveal');
-const playerNote = document.querySelector('[data-player-note]');
 
+// Update header on scroll
 const updateHeader = () => {
   header?.classList.toggle('scrolled', window.scrollY > 24);
 };
@@ -9,6 +9,7 @@ const updateHeader = () => {
 window.addEventListener('scroll', updateHeader, { passive: true });
 updateHeader();
 
+// Intersection Observer for reveal animations
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
@@ -20,17 +21,39 @@ const observer = new IntersectionObserver((entries) => {
 
 revealItems.forEach((item) => observer.observe(item));
 
-document.querySelectorAll('[data-track]').forEach((button) => {
-  button.addEventListener('click', () => {
-    const track = button.dataset.track;
-    document.querySelectorAll('[data-track]').forEach((other) => {
-      other.textContent = '▶';
-      other.setAttribute('aria-label', `Putar ${other.dataset.track}`);
-    });
-    button.textContent = 'Ⅱ';
-    button.setAttribute('aria-label', `Pause ${track}`);
-    if (playerNote) {
-      playerNote.textContent = `${track} dipilih — audio player siap dihubungkan ke rilisan resmi.`;
+// Gallery hover effects
+const galleryItems = document.querySelectorAll('.gallery-item');
+galleryItems.forEach((item) => {
+  item.addEventListener('mouseenter', function() {
+    this.style.animation = 'none';
+  });
+});
+
+// Smooth scroll for navigation links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    const href = this.getAttribute('href');
+    if (href !== '#' && document.querySelector(href)) {
+      e.preventDefault();
+      document.querySelector(href).scrollIntoView({ behavior: 'smooth' });
     }
   });
 });
+
+// Parallax effect on hero section
+const hero = document.querySelector('.hero');
+if (hero) {
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    if (scrollY < hero.offsetHeight) {
+      hero.style.backgroundPosition = `center ${scrollY * 0.5}px`;
+    }
+  }, { passive: true });
+}
+
+// Add stagger animation to multiple elements
+document.querySelectorAll('[data-stagger]').forEach((el, index) => {
+  el.style.animationDelay = `${index * 0.1}s`;
+});
+
+console.log('✨ Sahaye Melayu Portfolio Loaded');
